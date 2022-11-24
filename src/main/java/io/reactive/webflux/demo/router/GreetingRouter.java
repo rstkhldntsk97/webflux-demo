@@ -17,13 +17,14 @@ public class GreetingRouter {
     public RouterFunction<ServerResponse> route(GreetingHandler greetingHandler) {
         return RouterFunctions
                 .route(RequestPredicates
+                        .GET("/"), serverRequest ->
+                        ServerResponse
+                                .ok()
+                                .body(BodyInserters.fromValue("Welcome " + serverRequest.queryParam("name").orElse("Nobody") + " to Spring WebFlux!")))
+                .andRoute(RequestPredicates
                         .GET("/hello")
                         .and(RequestPredicates
-                                .accept(MediaType.TEXT_PLAIN)), greetingHandler::hello)
-                .andRoute(RequestPredicates
-                        .GET("/"), serverRequest -> ServerResponse
-                        .ok()
-                        .body(BodyInserters.fromValue("Welcome to Spring WebFlux!")));
+                                .accept(MediaType.TEXT_PLAIN)), greetingHandler::hello);
     }
 
 }
